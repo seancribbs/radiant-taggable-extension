@@ -26,7 +26,7 @@ class Tag < ActiveRecord::Base
   # NB unused tags are omitted
   
   named_scope :with_count, {
-    :select => "tags.*, count(tt.id) AS use_count", 
+    :select => "tags.*, count(*) AS use_count", 
     :joins => "INNER JOIN taggings as tt ON tt.tag_id = tags.id", 
     :group => Tag.column_names.map {|c| "#{Tag.table_name}.#{c}" }.join(", "),
     :order => 'title ASC'
@@ -34,7 +34,7 @@ class Tag < ActiveRecord::Base
   
   named_scope :most_popular, lambda { |count|
     {
-      :select => "tags.*, count(tt.id) AS use_count", 
+      :select => "tags.*, count(*) AS use_count", 
       :joins => "INNER JOIN taggings as tt ON tt.tag_id = tags.id", 
       :group => Tag.column_names.map {|c| "#{Tag.table_name}.#{c}" }.join(", "),
       :limit => count,
