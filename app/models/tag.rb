@@ -28,7 +28,7 @@ class Tag < ActiveRecord::Base
   named_scope :with_count, {
     :select => "tags.*, count(tt.id) AS use_count", 
     :joins => "INNER JOIN taggings as tt ON tt.tag_id = tags.id", 
-    :group => "tags.id",
+    :group => Tag.column_names.map {|c| "#{Tag.table_name}.#{c}" }.join(", "),
     :order => 'title ASC'
   }
   
@@ -36,7 +36,7 @@ class Tag < ActiveRecord::Base
     {
       :select => "tags.*, count(tt.id) AS use_count", 
       :joins => "INNER JOIN taggings as tt ON tt.tag_id = tags.id", 
-      :group => "tags.id",
+      :group => Tag.column_names.map {|c| "#{Tag.table_name}.#{c}" }.join(", "),
       :limit => count,
       :order => 'use_count DESC'
     }
