@@ -99,7 +99,11 @@ class Tag < ActiveRecord::Base
 
   def self.from_list(list=[], or_create=true)
     list = list.split(/[,;]\s*/) if String === list
-    list.uniq.map {|t| self.for(t, or_create) }.select{|t| !t.nil? } if list && list.any?
+    if list && list.any?
+      list.uniq.map {|t| self.for(t, or_create) }.compact
+    else
+      []
+    end
   end
   
   def self.to_list(tags=[])
